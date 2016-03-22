@@ -42,8 +42,16 @@ public abstract class Person implements java.io.Serializable {
 		this.LastName = LastName;
 	}
 
-	public Date getDOB() {
-		return DOB;
+	public Date getDOB() throws PersonException{
+		Calendar today = Calendar.getInstance();
+		Calendar birthDate = Calendar.getInstance();
+		
+		if((today.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR)>=100)){
+			throw new PersonException(this.DOB);
+		}
+		else{
+			return DOB;
+		}
 	}
 
 	public void setDOB(Date DOB){
@@ -65,8 +73,17 @@ public abstract class Person implements java.io.Serializable {
 	
 	}
 
-	public String getPhone() {
-		return phone_number;
+	public String getPhone() throws PersonException{
+		String regex = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(this.phone_number);
+		if(matcher.matches()){
+			return phone_number;
+		}
+		else{
+			System.out.println("Invalid Phone Number");
+			throw new PersonException(this.phone_number);
+		}
 	}
 
 	public void setEmail(String newEmail) {
